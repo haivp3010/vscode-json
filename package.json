@@ -48,6 +48,11 @@
     ],
     "commands": [
       {
+        "command": "extension.extractField",
+        "title": "Extract",
+        "category": "vscode-json"
+      },
+      {
         "command": "extension.validateJson",
         "title": "Validate",
         "category": "vscode-json"

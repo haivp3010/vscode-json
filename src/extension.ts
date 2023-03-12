@@ -115,6 +115,34 @@ export function activate(context: ExtensionContext) {
   });
 
   /**
+   * unescapeJson
+   */
+   let extractField = commands.registerCommand("extension.extractField", async () => {
+    // Get active editor
+    let editor = window.activeTextEditor;
+    console.log(editor);
+    if (!editor) {
+      return;
+    }
+
+    // Get the document
+    let doc = editor.document;
+    let text = doc.getText(editor.selection) || doc.getText();
+
+    // Remove trailing and leading whitespace
+    let trimmedText = text;
+
+    let field: string = await window.showInputBox({
+      'placeHolder': 'Field name'
+    })
+    let extractedText = jsonHelper.extract(trimmedText, field);
+
+    if (extractedText !== trimmedText) {
+      setText(editor, extractedText);
+    }
+  });
+
+  /**
    * beautifyJson
    */
   let beautifyJson = commands.registerCommand("extension.beautifyJson", () => {
@@ -182,6 +210,7 @@ export function activate(context: ExtensionContext) {
   context.subscriptions.push(uglifyJson);
   context.subscriptions.push(escapeJson);
   context.subscriptions.push(unescapeJson);
+  context.subscriptions.push(extractField);
 }
 
 /**

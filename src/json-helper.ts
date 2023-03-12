@@ -24,25 +24,44 @@ export default class {
       : text;
   }
 
-  /**
+  /*
    * unescape
    * @param text
    */
   public unescape(text: string): string {
-    let formattedText = text;
-    try {
-      if (!text.startsWith('"')) {
-        formattedText = '"'.concat(formattedText);
-      }
+    let lines = text.split(/\r?\n/);
+    let formattedLines = [];
+    for (let line of lines) {
+      let formattedText = line;
+      try {
+        if (!text.startsWith('"')) {
+          formattedText = '"'.concat(formattedText);
+        }
 
-      if (!text.endsWith('"')) {
-        formattedText = formattedText.concat('"');
-      }
+        if (!text.endsWith('"')) {
+          formattedText = formattedText.concat('"');
+        }
 
-      return JSON.parse(formattedText);
-    } catch (err) {
-      return text;
+        formattedLines.push(JSON.parse(formattedText));
+      } catch (err) {
+        formattedLines.push(text);
+      }
     }
+
+    return formattedLines.join('\n');
+  }
+
+  /**
+   * extract
+   * @param text
+   */
+   public extract(text, field: string): string {
+    let lines = text.split(/\r?\n/);
+    let formattedLines = [];
+    for (let line of lines) {
+      formattedLines.push(this.isValid(line) ? JSON.stringify(JSON.parse(line)[field]) : line);
+    }
+    return formattedLines.join('\n');
   }
 
   /**
